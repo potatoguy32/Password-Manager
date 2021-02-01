@@ -1,4 +1,4 @@
-from tkinter import Tk, Label, Button, Entry, Frame, Menu, PhotoImage, messagebox, Text
+from tkinter import Tk, Label, Button, Entry, Frame, Menu, PhotoImage, messagebox, Text, Scrollbar
 from CRUD import create, check_login, check_registered, register_user, query_site, submit_site
 
 
@@ -116,7 +116,6 @@ class App:
                                  message="The site is not registered or misspelled")
 
         else:
-            self.reset_menubar()
             self.clear_window()
             self.root.geometry("1050x500")
             self.make_header(f"I found {len(site_query)} sites, click on the text to copy !")
@@ -138,10 +137,10 @@ class App:
                 for j in range(5):
                     data = Text(self.query_site_frame, borderwidth=0, bg="#1ABC9C", bd=0)
                     data.insert(1.0, site_query[i][j])
-                    data.config(width=20, height=1, highlightbackground="#1ABC9C", padx=5, pady=10,
+                    data.config(width=22, height=1, highlightbackground="#1ABC9C", padx=5, pady=10,
                                 state="disabled", cursor="plus")
                     if j == 1:
-                        data.config(width=60)
+                        data.config(width=50)
 
                     data.grid(row=1 + i, column=j)
                     self.text_boxes.append(data)
