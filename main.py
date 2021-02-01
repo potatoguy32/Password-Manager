@@ -11,19 +11,12 @@ class App:
         self.root.title("My PWords")
         self.root.geometry("800x500")
         self.root.minsize(400, 300)
-
         # Create the database and tables if not exist
         create()
-
-        # Insert an image to the top bar
-        self.lock_photo = PhotoImage("Images/padlock.ico")
-        self.root.iconphoto(self.root, self.lock_photo)
-
         # Insert footer
         self.footer_text = Label(self.root, text="Copyrights potatoguy32 2021")
         self.footer_text.config(font=("Consolas", 8), bg="#1ABC9C")
         self.footer_text.pack(side="bottom", anchor="e")
-
         # Dictionary to store all the frames created and then control transitions
         self.frames = {}
 
