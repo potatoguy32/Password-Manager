@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def create():
+def create_db():
     # Create (connect) database
     conn = sqlite3.connect("PasswordManager.db")
     cur = conn.cursor()
@@ -9,8 +9,8 @@ def create():
     # Create users and passwords tables
     cur.execute("""
     CREATE TABLE IF NOT EXISTS Users (
-        user_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        username TEXT NOT NULL, 
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
         master_password TEXT NOT NULL
     );
     """)
@@ -34,7 +34,7 @@ def create():
 
 
 # Query to check if the user already is registered in the DB
-def check_login(username, password):
+def can_login(username, password):
     with sqlite3.connect("PasswordManager.db") as conn:
         cur = conn.cursor()
         cur.execute("""
@@ -44,21 +44,36 @@ def check_login(username, password):
                         "username": username,
                         "master_password": password
                     })
-        return cur.fetchone()
+        if cur.fetchone() is None:
+            return False
 
+        return True
 
-# Check if user already exist
-def check_registered(username):
-    with sqlite3.Connection("PasswordManager.db") as conn:
+def get_id(username):
+    with sqlite3.connect("PasswordManager.db") as conn:
         cur = conn.cursor()
-        cur.execute("""SELECT * FROM Users WHERE username = :username;""",
+        cur.execute("""SELECT user_id FROM Users WHERE username = :username""",
                     {
                         "username": username,
                     })
         return cur.fetchone()
 
 
-# Create a new user 
+# Check if user already exist
+def is_registered(username):
+    with sqlite3.Connection("PasswordManager.db") as conn:
+        cur = conn.cursor()
+        cur.execute("""SELECT * FROM Users WHERE username = :username;""",
+                    {
+                        "username": username,
+                    })
+        if len(cur.fetchall()) != 1:
+            return True
+
+        return False
+
+
+# Create a new user
 def register_user(username, password):
     conn = sqlite3.connect("PasswordManager.db")
     cur = conn.cursor()
@@ -71,18 +86,21 @@ def register_user(username, password):
     conn.close()
 
 
-def query_site(user_id, site):
+def query_site(user_id, site=None):
     with sqlite3.connect("PasswordManager.db") as conn:
         cur = conn.cursor()
-        if (site == "") or (not site):
-            cur.execute("""SELECT site, url, email, site_username, password FROM Passwords WHERE user_id = :user_id;""",
+        if site == "" or site is None:
+            cur.execute("""SELECT site, url, email, site_username, password
+                           FROM Passwords
+                           WHERE user_id = :user_id;""",
                         {
                             "user_id": user_id
                         })
 
         else:
-            cur.execute("""SELECT site, url, email, site_username, password FROM Passwords
-                            WHERE (site = :text OR url = :text) AND (user_id = :user_id);""",
+            cur.execute("""SELECT site, url, email, site_username, password
+                           FROM Passwords
+                           WHERE ((site LIKE  ':text') OR (url = :text)) AND (user_id = :user_id);""",
                         {
                             "text": site,
                             "user_id": user_id
@@ -105,3 +123,10 @@ def submit_site(user_id, site_name, site_url, site_email, site_username, site_pa
                         "password": site_password
                     })
         conn.commit()
+
+def get_data_to_config(user_id):
+    with sqlite3.connect("PasswordManager.db") as conn:
+        cur = conn.cursor()
+        cur.execute("""SELECT site, email, site_username FROM Passwords
+                        WHERE user_id = :user_id""", {"user_id": user_id})
+        return cur.fetchall()

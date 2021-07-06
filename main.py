@@ -4,7 +4,6 @@ from CRUD import create, check_login, check_registered, register_user, query_sit
 
 # Application class
 class App:
-
     def __init__(self):
         # Create main window
         self.root = Tk()
