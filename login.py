@@ -273,7 +273,7 @@ class App(Frame):
         self.mainWindow()
 
     def deletePassWindow(self):
-        sites_data = CRUD.get_data_to_config(self.self.current_user[2])
+        sites_data = CRUD.get_data_to_config(self.current_user[2])
         self.master.header_text.config(text="Select what you want you want to do")
         self.main_frame.destroy()
         self.main_frame = Frame(self.master, bg=self.master.BGCOLOR)
@@ -283,8 +283,18 @@ class App(Frame):
             bg=self.master.BGCOLOR).grid(column=1, row=0, sticky="nsew")
         Label(self.main_frame, text="Username", font=self.master.DEFAULTFONT,
             bg=self.master.BGCOLOR).grid(column=2, row=0, sticky="nsew")
+        Label(self.main_frame, text="Action", font=self.master.DEFAULTFONT,
+            bg=self.master.BGCOLOR).grid(column=3, row=0, sticky="nsew")
+        for i in range(len(sites_data)):
+            for j in range(3):
+                data = Text(self.main_frame, borderwidth=0, bg=self.master.BGCOLOR, bd=0)
+                data.insert(1.0, sites_data[i][j])
+                data.config(width=22, height=1, highlightbackground=self.master.BGCOLOR,
+                            padx=5, pady=10, state="disabled")
+                data.grid(row=1 + i, column=j)
+                
+
         self.main_frame.pack(anchor="center", side="top", fill="x", expand=True)
-        
 
 
 if __name__ == "__main__":
