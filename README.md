@@ -17,5 +17,7 @@ python3 login.py
 ```
 
 # Pending features
-I haven't finished the feature to config or delete your passwords, but you can use SQL to do it, I promise the feature will be ready soon :).  
+There is no scrolling bar when you add a large number of sites.  
+Also I haven't finished the feature to config or delete your passwords, but you can use SQL to do it, I promise the feature will be ready soon :).  
+
 
