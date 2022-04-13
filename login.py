@@ -2,7 +2,6 @@ import pyperclip
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
-
 from master import master
 import CRUD
 import encrypter
